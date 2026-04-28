@@ -24,7 +24,7 @@ def register():
         email=payload["email"],
         phone=payload["phone"],
         password=generate_password_hash(payload["password"]),
-        role=RoleEnum(payload.get("role", RoleEnum.PATIENT.value)),
+        role=RoleEnum.PATIENT,
     )
     db.session.add(user)
     db.session.commit()

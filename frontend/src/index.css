@@ -9,6 +9,11 @@
     linear-gradient(180deg, #fff7ed 0%, #ffffff 55%, #f0fdfa 100%);
 }
 
+html.dark :root {
+  color: #f1f5f9;
+  background: #0f172a;
+}
+
 body {
   min-width: 320px;
   min-height: 100vh;
@@ -22,4 +27,8 @@ body {
 .glass {
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(16px);
+}
+
+html.dark .glass {
+  background: rgba(30, 41, 59, 0.82);
 }

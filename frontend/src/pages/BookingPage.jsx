@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../lib/api";
 import SectionCard from "../components/SectionCard";
 import SlotChip from "../components/SlotChip";
+import { getFestivalWish } from "../lib/festivals";
 
 const initialForm = {
   city: "",
@@ -72,16 +73,16 @@ export default function BookingPage({ user }) {
 
   return (
     <div className="space-y-5 pb-28">
-      <section className="rounded-[32px] bg-slate-900 p-6 text-white shadow-2xl">
-        <p className="text-sm uppercase tracking-[0.35em] text-teal-300">Mobile-first booking</p>
+      <section className="rounded-[32px] bg-slate-900 dark:bg-slate-800 p-6 text-white shadow-2xl">
+        <p className="text-sm uppercase tracking-[0.35em] text-teal-300 dark:text-teal-400">Welcome</p>
         <h1 className="mt-3 font-heading text-3xl font-bold leading-tight">
-          Book dental care across cities without calling the clinic.
+          {getFestivalWish()}
         </h1>
-        <p className="mt-3 text-sm text-slate-300">
-          Live slot availability, instant payment, reminders, and clinic switching for traveling doctors.
+        <p className="mt-3 text-sm text-slate-300 dark:text-slate-400">
+          Book dental care across cities without calling the clinic. Live slot availability, instant payment, and automated reminders.
         </p>
         {user ? (
-          <div className="mt-5 rounded-2xl bg-white/10 px-4 py-3 text-sm text-slate-100">
+          <div className="mt-5 rounded-2xl bg-white/10 dark:bg-white/5 px-4 py-3 text-sm text-slate-100">
             Signed in as {user.name}
           </div>
         ) : null}
@@ -90,7 +91,7 @@ export default function BookingPage({ user }) {
       <SectionCard title="Find a clinic" subtitle="Choose city, clinic, doctor, and date">
         <div className="grid gap-3">
           <select
-            className="rounded-2xl border border-slate-200 bg-white px-4 py-3"
+            className="rounded-2xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3"
             value={form.city}
             onChange={(event) => setForm((current) => ({ ...current, city: event.target.value, clinic_id: "" }))}
           >
@@ -103,7 +104,7 @@ export default function BookingPage({ user }) {
           </select>
 
           <select
-            className="rounded-2xl border border-slate-200 bg-white px-4 py-3"
+            className="rounded-2xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3"
             value={form.clinic_id}
             onChange={(event) => setForm((current) => ({ ...current, clinic_id: event.target.value }))}
           >
@@ -116,7 +117,7 @@ export default function BookingPage({ user }) {
           </select>
 
           <select
-            className="rounded-2xl border border-slate-200 bg-white px-4 py-3"
+            className="rounded-2xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3"
             value={form.doctor_id}
             onChange={(event) => setForm((current) => ({ ...current, doctor_id: event.target.value }))}
           >
@@ -130,7 +131,7 @@ export default function BookingPage({ user }) {
 
           <input
             type="date"
-            className="rounded-2xl border border-slate-200 bg-white px-4 py-3"
+            className="rounded-2xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3"
             value={form.date}
             onChange={(event) => setForm((current) => ({ ...current, date: event.target.value }))}
           />
@@ -159,7 +160,7 @@ export default function BookingPage({ user }) {
         >
           Pay and confirm booking
         </button>
-        {feedback ? <p className="mt-3 text-sm text-slate-600">{feedback}</p> : null}
+        {feedback ? <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">{feedback}</p> : null}
       </SectionCard>
     </div>
   );

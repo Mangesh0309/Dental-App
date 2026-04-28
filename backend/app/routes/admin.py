@@ -4,7 +4,8 @@ from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import get_jwt, jwt_required
 
 from ..extensions import db
-from ..models import Clinic, Doctor, DoctorSchedule, Payment
+from werkzeug.security import generate_password_hash
+from ..models import Clinic, Doctor, DoctorSchedule, Payment, User, RoleEnum
 from ..services.reports import appointment_csv_rows, daily_metrics
 from ..services.scheduling import SchedulingError, ensure_no_overlap
 
@@ -16,6 +17,42 @@ def _require_staff():
     if role not in ["admin", "doctor"]:
         return jsonify({"message": "Staff access required."}), 403
     return None
+
+
+def _require_admin():
+    role = get_jwt().get("role")
+    if role != "admin":
+        return jsonify({"message": "Admin access required."}), 403
+    return None
+
+
+@admin_bp.post("/admins")
+@jwt_required()
+def create_admin():
+    denied = _require_admin()
+    if denied:
+        return denied
+
+    payload = request.get_json() or {}
+    required = ["name", "email", "phone", "password"]
+    missing = [field for field in required if not payload.get(field)]
+    if missing:
+        return jsonify({"message": f"Missing fields: {', '.join(missing)}"}), 400
+
+    if User.query.filter((User.email == payload["email"]) | (User.phone == payload["phone"])).first():
+        return jsonify({"message": "Email or phone already exists."}), 409
+
+    admin_user = User(
+        name=payload["name"],
+        email=payload["email"],
+        phone=payload["phone"],
+        password=generate_password_hash(payload["password"]),
+        role=RoleEnum.ADMIN,
+    )
+    db.session.add(admin_user)
+    db.session.commit()
+
+    return jsonify({"user": admin_user.to_dict()}), 201
 
 
 @admin_bp.get("/dashboard")
